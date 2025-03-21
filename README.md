@@ -116,9 +116,8 @@ select track, max(energy) as highest_energy from spotify group by 1 order by 2 d
 
 #### **List all tracks along with their views and likes where official_video = TRUE.**  
 ```sql
-select track, sum(views) as total_views, sum(likes) as total_likes
-from spotify where official_video = 'true'
-group by 1 order by 2 desc;
+select track, sum(views) as total_views, sum(likes) as total_likes from spotify
+where official_video = 'true' group by 1 order by 2 desc;
 ```
 
 #### **For each album, calculate the total views of all associated tracks.**  
@@ -131,8 +130,7 @@ select album, track, sum(views) as total_views from spotify group by 1,2 order b
 select * from (select track,
    coalesce(sum(case when most_played_on = 'Spotify' then stream End),0) as streamed_on_spotify,
    coalesce(sum(case when most_played_on = 'Youtube' then stream End),0) as streamed_on_youtube
-from spotify
-group by 1) as most_streamed
+from spotify group by 1) as most_streamed
 where streamed_on_spotify > streamed_on_youtube and streamed_on_youtube <> 0;
 ```
 
