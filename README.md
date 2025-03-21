@@ -116,7 +116,8 @@ select track, max(energy) as highest_energy from spotify group by 1 order by 2 d
 
 #### **List all tracks along with their views and likes where official_video = TRUE.**  
 ```sql
-select track, sum(views) as total_views, sum(likes) as total_likes from spotify where official_video = 'true'
+select track, sum(views) as total_views, sum(likes) as total_likes
+from spotify where official_video = 'true'
 group by 1 order by 2 desc;
 ```
 
@@ -128,8 +129,8 @@ select album, track, sum(views) as total_views from spotify group by 1,2 order b
 #### **Retrieve the track names that have been streamed on Spotify more than YouTube.**  
 ```sql
 select * from (select track,
-	coalesce(sum(case when most_played_on = 'Spotify' then stream End),0) as streamed_on_spotify,
-	coalesce(sum(case when most_played_on = 'Youtube' then stream End),0) as streamed_on_youtube
+   coalesce(sum(case when most_played_on = 'Spotify' then stream End),0) as streamed_on_spotify,
+   coalesce(sum(case when most_played_on = 'Youtube' then stream End),0) as streamed_on_youtube
 from spotify
 group by 1) as most_streamed
 where streamed_on_spotify > streamed_on_youtube and streamed_on_youtube <> 0;
@@ -140,19 +141,22 @@ where streamed_on_spotify > streamed_on_youtube and streamed_on_youtube <> 0;
 #### **Find the top 3 most-viewed tracks for each artist using window functions.**  
 ```sql
 with ranking_artist as
-	(select artist, track, sum(views) as total_views, dense_rank() over (partition by artist order by sum(views) desc) as rank 
+	(select artist, track, sum(views) as total_views,
+	dense_rank() over (partition by artist order by sum(views) desc) as rank 
 	from spotify group by 1,2 order by 1,3 desc)
 select * from ranking_artist where rank <=3;
 ```
 
 #### **Find tracks where the liveness score is above the average.**  
 ```sql
-select artist, track, liveness from spotify where liveness > (select avg(liveness) from spotify) order by 1,3 desc;
+select artist, track, liveness from spotify
+where liveness > (select avg(liveness) from spotify) order by 1,3 desc;
 ```
 
 #### **Calculate the difference between the highest and lowest energy values for tracks in each album.**  
 ```sql
-with diff as (select album, max(energy) as highest_energy, min(energy) as lowest_energy from spotify group by 1)
+with diff as (select album, max(energy) as highest_energy, min(energy) as lowest_energy
+from spotify group by 1)
 select album, highest_energy - lowest_energy as energy_difference from diff order by 2 desc;
 ```
 
