@@ -1,4 +1,4 @@
-# 🚀 Spotify Data Analytics | Advanced SQL & Query Optimization
+# 🚀 Behind the Music: Spotify Data Uncovered
 
 ![image](https://github.com/user-attachments/assets/2ff26b76-1cfb-49c5-bfd8-7e18451f4603)
 
